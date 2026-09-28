@@ -5,7 +5,7 @@ function pagesState(){try{const stored=JSON.parse(localStorage.getItem(pagesStor
 function pagesText(value,max=200){return typeof value==='string'?value.trim().slice(0,max):'';}
 function pagesAssert(value,message){if(!value)throw Error(message);}
 async function indieversePagesApi(path,data){
- if(path==='/api/catalog'){const response=await fetch('/catalog.json');if(!response.ok)throw Error('Không tải được danh mục game.');return response.json();}
+ if(path==='/api/catalog'){const response=await fetch((window.INDIEVERSE_BASE||'')+'/catalog.json');if(!response.ok)throw Error('Không tải được danh mục game.');return response.json();}
  const current=pagesState();
  if(path==='/api/state')return current;
  if(path==='/api/contact'||path==='/api/newsletter')throw Error('Bản GitHub Pages chưa có dịch vụ nhận thư. Vui lòng chưa gửi thông tin qua biểu mẫu này.');

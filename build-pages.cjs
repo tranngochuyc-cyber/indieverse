@@ -7,6 +7,8 @@ for(const name of ['style.css','pages.css','interiors.css','app.js','interiors.j
 let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 html=html.replace('<script src="/app.js"></script>','<script>window.INDIEVERSE_PAGES=true</script><script src="/pages-api.js"></script><script src="/app.js"></script>');
 html=html.replace('<script src="/motion.js"></script>','<script src="/pages-overrides.js"></script><script src="/motion.js"></script>');
+html=html.replace('window.INDIEVERSE_PAGES=true','window.INDIEVERSE_PAGES=true;window.INDIEVERSE_BASE="/indieverse"');
+html=html.replaceAll('href="/','href="/indieverse/').replaceAll('src="/','src="/indieverse/');
 fs.writeFileSync(path.join(output,'index.html'),html);
 fs.writeFileSync(path.join(output,'404.html'),html);
 fs.writeFileSync(path.join(output,'.nojekyll'),'');

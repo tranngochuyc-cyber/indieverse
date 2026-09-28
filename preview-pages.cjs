@@ -5,7 +5,8 @@ const root=path.join(__dirname,'dist');
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml'};
 http.createServer((request,response)=>{
  const url=new URL(request.url,'http://localhost');
- const resolved=path.resolve(root,'.'+decodeURIComponent(url.pathname));
+ const pathname=url.pathname.startsWith('/indieverse/')?url.pathname.slice('/indieverse'.length):url.pathname==='/indieverse'?'/':url.pathname;
+ const resolved=path.resolve(root,'.'+decodeURIComponent(pathname));
  if(!resolved.startsWith(root+path.sep)&&resolved!==root){response.writeHead(403);return response.end();}
  const file=resolved===root?path.join(root,'index.html'):fs.existsSync(resolved)&&fs.statSync(resolved).isFile()?resolved:path.extname(resolved)?null:path.join(root,'404.html');
  if(!file){response.writeHead(404);return response.end();}
