@@ -1,5 +1,7 @@
 # Indieverse
 
+**Chơi và đọc trực tuyến:** [Mở website Indieverse ↗](https://tranngochuyc-cyber.github.io/indieverse/)
+
 Website tiếng Việt review game indie 2D/3D. Chạy bằng Node.js 20 trở lên, không cần cài thư viện.
 
 ```sh
@@ -10,7 +12,7 @@ Mở http://localhost:5173. `npm run check` kiểm tra cú pháp; `npm test` ki�
 
 ## GitHub Pages
 
-`npm run build:pages` tạo website tĩnh trong `dist/`. Workflow tại `.github/workflows/pages.yml` tự xây dựng và xuất bản khi có thay đổi trên nhánh `main`. Kho mã `indieverse` xuất bản tại `https://tranngochuyc-cyber.github.io/indieverse/`; GitHub Pages dùng nguồn **GitHub Actions**.
+`npm run build:pages` tạo website tĩnh trong `dist/`. Workflow tại `.github/workflows/pages.yml` tự xây dựng và xuất bản khi có thay đổi trên nhánh `main`. Kho mã `indieverse` xuất bản tại [tranngochuyc-cyber.github.io/indieverse](https://tranngochuyc-cyber.github.io/indieverse/); GitHub Pages dùng nguồn **GitHub Actions**.
 
 GitHub Pages không chạy máy chủ Node.js. Bản công khai lưu sổ tay, hồ sơ, cảm nhận và bộ sưu tập bằng `localStorage` trong trình duyệt. Các dữ liệu này không đồng bộ hay công khai. Trang liên hệ và bản tin hiển thị rõ là chưa có dịch vụ nhận thư. Các đường dẫn bài trực tiếp dùng `404.html` làm lối vào ứng dụng một trang.
 
