@@ -1,0 +1,14 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const root=__dirname;
+const output=path.join(root,'dist');
+fs.mkdirSync(output,{recursive:true});
+for(const name of ['style.css','pages.css','interiors.css','app.js','interiors.js','indie-hub.js','motion.js','pages-api.js','pages-overrides.js','favicon.svg'])fs.copyFileSync(path.join(root,name),path.join(output,name));
+let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+html=html.replace('<script src="/app.js"></script>','<script>window.INDIEVERSE_PAGES=true</script><script src="/pages-api.js"></script><script src="/app.js"></script>');
+html=html.replace('<script src="/motion.js"></script>','<script src="/pages-overrides.js"></script><script src="/motion.js"></script>');
+fs.writeFileSync(path.join(output,'index.html'),html);
+fs.writeFileSync(path.join(output,'404.html'),html);
+fs.writeFileSync(path.join(output,'.nojekyll'),'');
+fs.writeFileSync(path.join(output,'catalog.json'),JSON.stringify(require('./data/catalog.cjs')));
+console.log('Built GitHub Pages site in dist/');

@@ -1,0 +1,8 @@
+node_modules/
+data/store.json
+data/store.json.tmp
+test-results/
+dist/
+research/
+data/editorial*.txt
+AGENTS.md
