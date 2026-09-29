@@ -1,0 +1,6 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const d=require('./discovery-engine.js');const catalog=require('./data/catalog.cjs');
+test('curated profiles refer to real catalog games',()=>{for(const p of Object.values(d.profiles))assert(catalog.games.some(g=>g.slug===p.slug),p.slug);});
+test('context filters respect session time and co-op',()=>{const games=d.recommend({minutes:15,coop:'yes'});assert(games.length);assert(games.every(g=>g.minutes<=15&&g.coop));});
+test('negative preference lowers difficulty of recommendations',()=>{const games=d.recommend({like:'hollow-knight',positive:0,avoid:2});assert(!games.some(g=>g.slug==='hollow-knight'));assert(games[0].vector[2]<=2);});
+test('DNA starts unknown and responds to actual recorded games',()=>{assert(d.dna().values.every(v=>v===null));const a=d.dna({'a-short-hike':{status:'completed',rating:9}});assert.equal(a.evidence,1);assert.equal(a.values[0],100);assert.equal(a.values[2],20);});
+test('official galleries use distinct screenshots',()=>{for(const g of catalog.games.filter(g=>g.steamMedia)){assert.equal(new Set(g.images.map(m=>m.src)).size,g.images.length);assert(g.images.every(m=>g.steamMedia.screenshots.includes(m.src)));}});

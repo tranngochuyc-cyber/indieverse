@@ -2,7 +2,8 @@ const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').normalize('NFC').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let catalog,state,discoveryCatalog,heroIndex=0,lastFocus;
 const labels={wishlist:'Muốn chơi',playing:'Đang chơi',completed:'Đã hoàn thành',paused:'Tạm dừng'};
-const img=(g,k='header')=>g.id>=150&&g.images?.length?g.images[k==='library_hero'?0:k==='library_600x900'?2:1].src:`https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${g.app}/${k}.jpg`;
+const assetUrl=src=>src?.startsWith('/assets/')?(typeof window==='undefined'?'':window.INDIEVERSE_BASE||'')+src:src;
+const img=(g,k='header')=>assetUrl(g.steamMedia?.screenshots?.length&&k!=='library_600x900'?g.steamMedia.screenshots[0]:g.id>=150&&g.coverImage?g.coverImage:`https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${g.app}/${k}.jpg`);
 const gu=g=>'/games/'+g.slug,ru=g=>'/reviews/'+g.slug;
 const avatar=(name,cls='')=>`<span class="person-avatar ${cls}">${esc(name.split(' ').map(n=>n[0]).slice(-2).join(''))}</span>`;
 const qp=()=>new URLSearchParams(location.search),route=()=>{const base=typeof window!=='undefined'&&window.INDIEVERSE_BASE||'';const pathname=base&&location.pathname.startsWith(base)?location.pathname.slice(base.length):location.pathname;return pathname.replace(/\/$/,'')||'/';};
@@ -31,6 +32,8 @@ function pagination(count){const total=Math.ceil(count/6),current=Math.min(Math.
 function comments(g){const cs=state.comments.filter(c=>c.gameId===g.id);return `<section id="comments" class="comments-section"><h2>Cảm nhận của bạn <span>(${cs.length})</span></h2><p class="section-description">Một góc để lưu cảm nhận cá nhân. Bình luận được lưu cho phiên sử dụng tại máy này.</p><form data-form="comment" data-game="${g.id}" class="comment-form"><label for="comment-content">Bạn nghĩ gì về ${g.name}?</label><textarea id="comment-content" name="content" minlength="3" maxlength="2000" required placeholder="Một khoảnh khắc, một điều bạn thích hoặc một điểm cần cải thiện…"></textarea><div class="comment-actions"><label class="checkbox-label"><input type="checkbox" name="spoiler"> Có tiết lộ nội dung game</label><button class="primary" type="submit">Lưu cảm nhận ↗</button></div><p class="form-feedback" role="status"></p></form><div class="comment-list">${cs.map(c=>`<article class="comment"><div class="comment-head">${avatar(c.name)}<strong>${esc(c.name)}</strong><time>${new Date(c.date).toLocaleDateString('vi-VN')}</time><button data-remove-comment="${c.id}">Xóa</button></div>${c.spoiler?`<details><summary>Có tiết lộ nội dung — nhấn để đọc</summary><p>${esc(c.content)}</p></details>`:`<p>${esc(c.content)}</p>`}</article>`).join('')||'<p class="quiet-empty">Chưa có cảm nhận. Bắt đầu câu chuyện của bạn ở phía trên.</p>'}</div></section>`;}
 function render(){shell();const path=route(),[section,slug,...rest]=path.slice(1).split('/');let html,title;const g=catalog.games.find(g=>g.slug===slug);if(rest.length){html=notFound();title='Không tìm thấy';}
 else if(path==='/'){html=home();title='Thế giới nhỏ. Trải nghiệm lớn.';}
+else if(section==='play'){html=V8.page(slug);title='Play Lab';}
+else if(path==='/login'){html=loginPage();title='Đăng nhập';}
 else if(path==='/games'||path==='/reviews'){html=browse(section);title=section==='games'?'Kho game indie':'Bài đánh giá';}
 else if(section==='games'&&g){html=gameDetail(g);title=g.name;}
 else if(section==='reviews'&&g){html=reviewDetail(g);title=g.title;}

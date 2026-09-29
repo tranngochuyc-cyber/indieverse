@@ -2,6 +2,14 @@
 
 **Chơi và đọc trực tuyến:** [Mở website Indieverse ↗](https://tranngochuyc-cyber.github.io/indieverse/)
 
+## Bản mở rộng trải nghiệm — 29/09/2026
+
+Danh mục giữ 250 game. Các bài có ảnh chụp màn chơi khác nhau từ trang Steam; OXENFREE dùng bốn ảnh từ press kit của Night School Studio, The Rewinder dùng bảy ảnh do nhà phát hành cung cấp trên Nintendo. Bản desktop được thu gọn, nhưng cỡ chữ bài và vùng chạm trên điện thoại vẫn dễ đọc. Bài game có liên kết Steam ở cuối và khu vực thảo luận riêng.
+
+Play Lab gồm bộ tìm game theo thời gian/tâm trạng, Game DNA từ dữ liệu sổ tay, atlas cơ chế, gợi ý giữ/loại một đặc điểm, hành trình khám phá, demo mỗi ngày, nhật ký theo giờ chơi, lý do bỏ dở, Radar và so sánh hai game. Những suy luận sở thích là gợi ý biên tập dựa trên 24 hồ sơ game; không có chỉ số hay phiếu bầu cộng đồng giả. Kho game có bảng Steam Most Played theo ảnh chụp thời điểm và nút chuyển game.
+
+Trang đăng nhập và khu đánh giá/thảo luận công khai đã có giao diện, connector và schema Supabase. Chưa có dự án Supabase của chủ website nên Google/email/diễn đàn công khai được khóa và ghi rõ trạng thái. Steam cần cổng xác thực riêng, chưa hoạt động. Xem [COMMUNITY-SETUP.md](COMMUNITY-SETUP.md) để kết nối và kiểm thử trước khi bật. Sổ tay, Game DNA, các lựa chọn khám phá hiện chỉ lưu trên trình duyệt đang dùng.
+
 Website tiếng Việt review game indie 2D/3D. Chạy bằng Node.js 20 trở lên, không cần cài thư viện.
 
 ```sh

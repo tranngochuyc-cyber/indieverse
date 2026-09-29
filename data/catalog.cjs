@@ -96,3 +96,19 @@ module.exports.collections.unshift(...[
 ].map(([slug,title,subtitle,slugs,notes,angle])=>({slug,title,subtitle,description:angle,angle,notes,ids:slugs.map(s=>module.exports.games.find(g=>g.slug===s).id),color:'#c4a1e5'})));
 
 module.exports.games.push(...require('./games-v7.json'));
+
+const steamMediaV8=require('./steam-media-v8.json');
+module.exports.steamChart=require('./steam-chart.json');
+for(const group of [module.exports.games,module.exports.home?.games]){for(const g of group||[]){const m=steamMediaV8[g.app];if(!m?.screenshots?.length)continue;g.coverImage=g.images?.[2]?.src;g.steamMedia=m;g.images=m.screenshots.map((src,i)=>({src,kind:'Ảnh chụp màn chơi chính thức',alt:g.name+' — cảnh chơi '+(i+1),sourceUrl:g.source||'https://store.steampowered.com/app/'+g.app+'/',credit:g.developer+' / Steam'}));}}
+
+for(const group of [module.exports.games,module.exports.home?.games])for(const g of group||[]){
+  const order=g.slug==='hoa'?[4,1,2,0,3]:g.slug==='core-keeper'?[3,1,0,6,2,4,5,7]:null;
+  if(order&&g.images?.length>=order.length){g.images=order.map(i=>g.images[i]);g.steamMedia.screenshots=g.images.map(m=>m.src);}
+  const local=g.slug==='oxenfree'?{files:[1,2,3,4],studio:'Night School Studio',source:'https://nightschoolstudio.com/press-kit/oxenfree-press-kit/'}:g.slug==='the-rewinder'?{files:[2,7,3,6,4,5,1],studio:'MistyMountainStudio',source:'https://www.nintendo.com/us/store/products/the-rewinder-switch/'}:null;
+  if(!local)continue;
+  const folder=g.slug==='oxenfree'?'oxenfree':'rewinder';
+  const shots=local.files.map(n=>'/assets/'+folder+'/scene-'+n+'.jpg');
+  g.coverImage=g.images?.[2]?.src;
+  g.steamMedia={screenshots:shots,demos:[]};
+  g.images=shots.map((src,i)=>({src,kind:'Ảnh game chính thức',alt:g.name+' — cảnh chơi '+(i+1),sourceUrl:local.source,credit:local.studio+(folder==='rewinder'?' / Nintendo':' / press kit')}));
+}

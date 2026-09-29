@@ -1,0 +1,31 @@
+{
+  "source": "https://store.steampowered.com/charts/mostplayed",
+  "rollupDate": 1790467200,
+  "checkedAt": "2026-09-28T11:01:00.600Z",
+  "rows": [
+    {
+      "rank": 23,
+      "appid": 1973530,
+      "last_week_rank": 26,
+      "peak_in_game": 63003
+    },
+    {
+      "rank": 24,
+      "appid": 105600,
+      "last_week_rank": 21,
+      "peak_in_game": 50994
+    },
+    {
+      "rank": 25,
+      "appid": 413150,
+      "last_week_rank": 23,
+      "peak_in_game": 84487
+    },
+    {
+      "rank": 83,
+      "appid": 294100,
+      "last_week_rank": 80,
+      "peak_in_game": 39257
+    }
+  ]
+}

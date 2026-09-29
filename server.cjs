@@ -54,7 +54,8 @@ const server=http.createServer(async(req,res)=>{try{
   persist();return json(res,200,s);
  }
  if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Phương thức không được hỗ trợ.'});
- const publicFiles={'/indie-hub.js':['indie-hub.js','text/javascript; charset=utf-8'],'/interiors.css':['interiors.css','text/css; charset=utf-8'],'/interiors.js':['interiors.js','text/javascript; charset=utf-8'],'/motion.js':['motion.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/pages.css':['pages.css','text/css; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/favicon.svg':['favicon.svg','image/svg+xml']};
+ const publicFiles={"/discovery-engine.js":["discovery-engine.js","text/javascript; charset=utf-8"],"/community-config.js":["community-config.js","text/javascript; charset=utf-8"],"/community.js":["community.js","text/javascript; charset=utf-8"],"/experience-v8.js":["experience-v8.js","text/javascript; charset=utf-8"],"/experience-v8.css":["experience-v8.css","text/css; charset=utf-8"],'/indie-hub.js':['indie-hub.js','text/javascript; charset=utf-8'],'/interiors.css':['interiors.css','text/css; charset=utf-8'],'/interiors.js':['interiors.js','text/javascript; charset=utf-8'],'/motion.js':['motion.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/pages.css':['pages.css','text/css; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/favicon.svg':['favicon.svg','image/svg+xml']};
+ for(const [folder,count] of [['oxenfree',4],['rewinder',7]])for(let i=1;i<=count;i++)publicFiles[`/assets/${folder}/scene-${i}.jpg`]=[`assets/${folder}/scene-${i}.jpg`,'image/jpeg'];
  const file=publicFiles[url.pathname]||(path.extname(url.pathname)?null:['index.html','text/html; charset=utf-8']);
  if(!file){res.writeHead(404);return res.end('Not found');}
  res.setHeader('Content-Type',file[1]);res.setHeader('Cache-Control','no-cache');
