@@ -4,7 +4,7 @@ create table public.reviews (
  user_id uuid not null references auth.users(id) on delete cascade,
  game_id integer not null check (game_id between 0 and 249),
  display_name text not null check (char_length(display_name) between 1 and 60),
- rating numeric not null check (rating between 0 and 10),
+ rating integer not null check (rating between 1 and 5),
  hours numeric not null check (hours between 0 and 100000),
  body text not null check (char_length(body) between 10 and 1000),
  spoiler boolean not null default false,

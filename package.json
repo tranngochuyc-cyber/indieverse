@@ -6,7 +6,7 @@
     "dev": "node server.cjs",
     "start": "node server.cjs",
     "build:pages": "node build-pages.cjs",
-    "check": "node --check app.js && node --check interiors.js && node --check motion.js && node --check server.cjs && node --check data/catalog.cjs && node --check data/reviews-v3.cjs && node --check data/expansion-v4.cjs && node --check data/features-v4.cjs && node --check data/insights-v4.cjs && node --check data/focused-features-v4.cjs && node --check indie-hub.js && node --check experience-v8.js && node --check community.js && node --check discovery-engine.js",
-    "test": "node --test server.test.cjs content.test.cjs discovery.test.cjs experience.test.cjs"
+    "check": "node --check app.js && node --check interiors.js && node --check motion.js && node --check server.cjs && node --check data/catalog.cjs && node --check data/reviews-v3.cjs && node --check data/expansion-v4.cjs && node --check data/features-v4.cjs && node --check data/insights-v4.cjs && node --check data/focused-features-v4.cjs && node --check indie-hub.js && node --check review-perspectives.js && node --check experience-v8.js && node --check community.js && node --check discovery-engine.js",
+    "test": "node --test server.test.cjs content.test.cjs discovery.test.cjs experience.test.cjs review-perspectives.test.cjs"
   }
 }

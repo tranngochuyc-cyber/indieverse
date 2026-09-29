@@ -5,6 +5,7 @@ Bản GitHub Pages vẫn hoạt động độc lập. Các nút đăng nhập/đ
 ## Email và Google
 
 1. Tạo dự án Supabase do bạn sở hữu. Chạy `backend/community.sql` một lần trong SQL Editor của dự án mới. Bảng có Row Level Security: khách được đọc, người đăng nhập chỉ được tạo/xóa bài thuộc chính tài khoản mình.
+   Biểu mẫu đánh giá dùng 1–5 sao nguyên; nếu bạn đã chạy bản SQL cũ với thang 0–10, cần chuyển dữ liệu và ràng buộc trước khi cập nhật giao diện.
 2. Trong Authentication → URL Configuration, thêm Site URL `https://tranngochuyc-cyber.github.io/indieverse/` và Redirect URL `https://tranngochuyc-cyber.github.io/indieverse/login`. Khi thử local thêm `http://localhost:5174/indieverse/login`.
 3. Bật Email, cấu hình SMTP để gửi thư cho người dùng thực tế. Luồng hiện dùng liên kết đăng nhập, không thu mật khẩu.
 4. Bật Google provider. Tạo OAuth web client trong Google Cloud. Origin là `https://tranngochuyc-cyber.github.io`; callback lấy từ trang Google provider của Supabase. Client secret chỉ nhập trong Supabase, tuyệt đối không ghi vào repository.

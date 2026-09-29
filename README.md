@@ -12,6 +12,8 @@ Nhánh Art của Rabbit Hole đối chiếu nhãn phong cách hình ảnh đư�
 
 Trong Living Review, người chơi có thể ghi yếu tố mình thích ở từng mốc giờ. Lựa chọn đó cùng trạng thái, điểm tự chấm và lý do bỏ dở cập nhật Game DNA cục bộ; không thu thập thời gian chơi tự động từ Steam.
 
+Mỗi trang game và bài phân tích có 20 góc nhìn ngắn được biên tập từ nội dung riêng của game, với 1–5 sao **hợp gu**. Chúng được ghi rõ là nội dung biên tập, không mạo danh người chơi và không chép đánh giá trên trang khác. Người đọc có thể lọc số sao, mở thêm thẻ và đi tới đánh giá người chơi thật trên Steam. Biểu mẫu đánh giá công khai sau khi kết nối Supabase dùng thang 1–5 sao.
+
 Trang đăng nhập và khu đánh giá/thảo luận công khai đã có giao diện, connector và schema Supabase. Chưa có dự án Supabase của chủ website nên Google/email/diễn đàn công khai được khóa và ghi rõ trạng thái. Steam cần cổng xác thực riêng, chưa hoạt động. Xem [COMMUNITY-SETUP.md](COMMUNITY-SETUP.md) để kết nối và kiểm thử trước khi bật. Sổ tay, Game DNA, các lựa chọn khám phá hiện chỉ lưu trên trình duyệt đang dùng.
 
 Website tiếng Việt review game indie 2D/3D. Chạy bằng Node.js 20 trở lên, không cần cài thư viện.
