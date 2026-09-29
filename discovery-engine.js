@@ -28,6 +28,10 @@
     ['broforce',[1,1,3,0,0,1,0,4],15,'intense','medium','combat',true,'Màn ngắn, môi trường phá hủy và co-op hỗn loạn.']
   ];
   const profiles=Object.fromEntries(rows.map(([slug,vector,minutes,mood,energy,activity,coop,reason])=>[slug,{slug,vector,minutes,mood,energy,activity,coop,reason}]));
+  const visualStyles={
+    'a-short-hike':['low-poly','pastel','nature'],'stardew-valley':['pixel','warm','nature'],'core-keeper':['pixel','warm','underground'],'outer-wilds':['low-poly','space','warm'],'tunic':['low-poly','pastel','fantasy'],'hollow-knight':['hand-drawn','dark','fantasy'],'celeste':['pixel','pastel','mountain'],'hades':['hand-drawn','high-contrast','fantasy'],'dead-cells':['pixel','dark','fantasy'],'nine-sols':['hand-drawn','dark','fantasy'],'coffee-talk':['pixel','warm','urban'],'a-space-for-the-unbound':['pixel','warm','urban'],'gris':['hand-drawn','pastel','nature'],'hoa':['hand-drawn','pastel','nature'],'baba-is-you':['pixel','minimal'],'cocoon':['low-poly','minimal','fantasy'],'return-of-the-obra-dinn':['monochrome','high-contrast','minimal'],'slay-the-spire':['hand-drawn','fantasy'],'balatro':['pixel','high-contrast'],'noita':['pixel','dark','fantasy'],'dredge':['low-poly','dark','nature'],'sifu':['low-poly','urban','high-contrast'],'sanabi':['pixel','urban','high-contrast'],'broforce':['pixel','urban','high-contrast']
+  };
+  function visualNeighbor(slug,excluded=[]){const tags=visualStyles[slug]||[];return Object.keys(profiles).filter(s=>s!==slug&&!excluded.includes(s)).map(s=>({slug:s,shared:(visualStyles[s]||[]).filter(t=>tags.includes(t))})).sort((a,b)=>b.shared.length-a.shared.length||a.slug.localeCompare(b.slug))[0];}
   const reasons={'grind':'Quá nhiều grind','repetition':'Lối chơi lặp lại','story':'Truyện chậm','difficulty':'Quá khó','easy':'Quá dễ','ui':'Giao diện khó dùng','technical':'Lỗi kỹ thuật','time':'Không còn thời gian','fit':'Không hợp lối chơi','length':'Game quá dài'};
   function recommend({minutes=60,mood='',energy='',activity='',coop='',like='',positive=0,avoid=-1}={}){
     return rows.map(([slug])=>profiles[slug]).filter(p=>p.slug!==like&&p.minutes<=Number(minutes)&&(!coop||coop!=='yes'||p.coop)).map(p=>{
@@ -48,6 +52,6 @@
     }
     return {evidence,values:sums.map((n,i)=>weights[i]?Math.round(n/weights[i]*20):null)};
   }
-  const api={axes,profiles,reasons,recommend,dna};
+  const api={axes,profiles,reasons,recommend,dna,visualStyles,visualNeighbor};
   if(typeof module!=='undefined')module.exports=api;else root.IVDiscovery=api;
 })(typeof window!=='undefined'?window:globalThis);

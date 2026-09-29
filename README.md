@@ -8,6 +8,8 @@ Danh mục giữ 250 game. Các bài có ảnh chụp màn chơi khác nhau từ
 
 Play Lab gồm bộ tìm game theo thời gian/tâm trạng, Game DNA từ dữ liệu sổ tay, atlas cơ chế, gợi ý giữ/loại một đặc điểm, hành trình khám phá, demo mỗi ngày, nhật ký theo giờ chơi, lý do bỏ dở, Radar và so sánh hai game. Những suy luận sở thích là gợi ý biên tập dựa trên 24 hồ sơ game; không có chỉ số hay phiếu bầu cộng đồng giả. Kho game có bảng Steam Most Played theo ảnh chụp thời điểm và nút chuyển game.
 
+Nhánh Art của Rabbit Hole đối chiếu nhãn phong cách hình ảnh được biên tập cho 24 game. Game Battle đặt các đặc tính đó cạnh nhau theo thang mô tả 0–5; đây không phải điểm chất lượng hay bình chọn người chơi.
+
 Trang đăng nhập và khu đánh giá/thảo luận công khai đã có giao diện, connector và schema Supabase. Chưa có dự án Supabase của chủ website nên Google/email/diễn đàn công khai được khóa và ghi rõ trạng thái. Steam cần cổng xác thực riêng, chưa hoạt động. Xem [COMMUNITY-SETUP.md](COMMUNITY-SETUP.md) để kết nối và kiểm thử trước khi bật. Sổ tay, Game DNA, các lựa chọn khám phá hiện chỉ lưu trên trình duyệt đang dùng.
 
 Website tiếng Việt review game indie 2D/3D. Chạy bằng Node.js 20 trở lên, không cần cài thư viện.
