@@ -10,6 +10,8 @@ Play Lab gồm bộ tìm game theo thời gian/tâm trạng, Game DNA từ dữ 
 
 Nhánh Art của Rabbit Hole đối chiếu nhãn phong cách hình ảnh được biên tập cho 24 game. Game Battle đặt các đặc tính đó cạnh nhau theo thang mô tả 0–5; đây không phải điểm chất lượng hay bình chọn người chơi.
 
+Trong Living Review, người chơi có thể ghi yếu tố mình thích ở từng mốc giờ. Lựa chọn đó cùng trạng thái, điểm tự chấm và lý do bỏ dở cập nhật Game DNA cục bộ; không thu thập thời gian chơi tự động từ Steam.
+
 Trang đăng nhập và khu đánh giá/thảo luận công khai đã có giao diện, connector và schema Supabase. Chưa có dự án Supabase của chủ website nên Google/email/diễn đàn công khai được khóa và ghi rõ trạng thái. Steam cần cổng xác thực riêng, chưa hoạt động. Xem [COMMUNITY-SETUP.md](COMMUNITY-SETUP.md) để kết nối và kiểm thử trước khi bật. Sổ tay, Game DNA, các lựa chọn khám phá hiện chỉ lưu trên trình duyệt đang dùng.
 
 Website tiếng Việt review game indie 2D/3D. Chạy bằng Node.js 20 trở lên, không cần cài thư viện.

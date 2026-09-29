@@ -48,7 +48,7 @@
       const hours=journal.filter(j=>j.slug===slug).reduce((n,j)=>Math.max(n,Number(j.hours)||0),0);
       const w=(e.status==='wishlist'?.25:e.status==='completed'?2:1)*(e.rating==null?1:Math.max(.1,Number(e.rating)/5))*(1+Math.min(hours,50)/50);
       const dropAxis={grind:4,difficulty:2,easy:2,story:1};
-      p.vector.forEach((v,i)=>{let value=v;const reason=dropped[slug]?.reason;if(dropAxis[reason]===i)value=reason==='easy'?5:Math.max(0,v-2);sums[i]+=value*w;weights[i]+=w;});evidence++;
+      p.vector.forEach((v,i)=>{let value=v;const reason=dropped[slug]?.reason;if(dropAxis[reason]===i)value=reason==='easy'?5:Math.max(0,v-2);const favorites=journal.filter(j=>j.slug===slug&&j.focus!==undefined&&j.focus!==''&&Number(j.focus)===i).length;if(favorites)value=Math.min(5,value+Math.min(2,favorites));sums[i]+=value*w;weights[i]+=w;});evidence++;
     }
     return {evidence,values:sums.map((n,i)=>weights[i]?Math.round(n/weights[i]*20):null)};
   }
