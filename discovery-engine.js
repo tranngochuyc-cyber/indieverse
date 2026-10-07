@@ -34,7 +34,7 @@
   function visualNeighbor(slug,excluded=[]){const tags=visualStyles[slug]||[];return Object.keys(profiles).filter(s=>s!==slug&&!excluded.includes(s)).map(s=>({slug:s,shared:(visualStyles[s]||[]).filter(t=>tags.includes(t))})).sort((a,b)=>b.shared.length-a.shared.length||a.slug.localeCompare(b.slug))[0];}
   const reasons={'grind':'Quá nhiều grind','repetition':'Lối chơi lặp lại','story':'Truyện chậm','difficulty':'Quá khó','easy':'Quá dễ','ui':'Giao diện khó dùng','technical':'Lỗi kỹ thuật','time':'Không còn thời gian','fit':'Không hợp lối chơi','length':'Game quá dài'};
   function recommend({minutes=60,mood='',energy='',activity='',coop='',like='',positive=0,avoid=-1}={}){
-    return rows.map(([slug])=>profiles[slug]).filter(p=>p.slug!==like&&p.minutes<=Number(minutes)&&(!coop||coop!=='yes'||p.coop)).map(p=>{
+    return Object.values(profiles).filter(p=>p.slug!==like&&p.minutes<=Number(minutes)&&(!coop||coop!=='yes'||p.coop)).map(p=>{
       let score=(p.mood===mood?4:0)+(p.energy===energy?4:0)+(p.activity===activity?5:0);
       if(like&&profiles[like])score+=5-Math.abs(p.vector[positive]-profiles[like].vector[positive]);
       if(Number(avoid)>=0)score-=p.vector[Number(avoid)]*2;

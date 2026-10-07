@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+var
+backups
+node_modules
+dist
+research
+test-results
+data/store.json
+data/store.json.tmp
+*.test.cjs
+AGENTS.md

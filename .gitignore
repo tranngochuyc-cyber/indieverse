@@ -6,3 +6,9 @@ dist/
 research/
 data/editorial*.txt
 AGENTS.md
+
+var/
+.env
+.env.*
+!.env.example
+backups/

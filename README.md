@@ -2,6 +2,10 @@
 
 **Chơi và đọc trực tuyến:** [Mở website Indieverse ↗](https://tranngochuyc-cyber.github.io/indieverse/)
 
+## Trang quản trị và triển khai máy chủ — 07/10/2026
+
+Bản Node có Indieverse Studio tại `/admin`: đăng nhập phân quyền, chỉnh nội dung/ảnh/màu, bản nháp, xem trước, xuất bản, lịch sử, kho ảnh, hộp thư và tài khoản quản trị. Dữ liệu lưu SQLite, ảnh giữ trong volume. Cần Node.js 24+. Không có mật khẩu mặc định. Xem [DEPLOYMENT.md](DEPLOYMENT.md) để tạo admin và chạy Docker/Caddy với tên miền riêng. GitHub Pages vẫn là bản tĩnh độc lập, không chạy backend.
+
 ## Bản mở rộng trải nghiệm — 29/09/2026
 
 Danh mục giữ 250 game. Các bài có ảnh chụp màn chơi khác nhau từ trang Steam; OXENFREE dùng bốn ảnh từ press kit của Night School Studio, The Rewinder dùng bảy ảnh do nhà phát hành cung cấp trên Nintendo. Bản desktop được thu gọn, nhưng cỡ chữ bài và vùng chạm trên điện thoại vẫn dễ đọc. Bài game có liên kết Steam ở cuối và khu vực thảo luận riêng.

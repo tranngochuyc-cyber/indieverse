@@ -3,28 +3,38 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {randomUUID}=require('node:crypto');
 const catalog=require('./data/catalog.cjs');
+const cms=require('./backend/cms.cjs');
+if(process.env.NODE_ENV==='production'&&!/^https:\/\/[^/]+$/.test(process.env.PUBLIC_ORIGIN||''))throw Error('PUBLIC_ORIGIN phải là tên miền HTTPS, không có dấu / cuối.');
 const root=__dirname;
 const storePath=process.env.IV_STORE_PATH||path.join(root,'data','store.json');
-let store={sessions:{},messages:[],newsletter:[]};
-if(fs.existsSync(storePath))store=JSON.parse(fs.readFileSync(storePath,'utf8'));
-function persist(){fs.writeFileSync(storePath+'.tmp',JSON.stringify(store,null,2));fs.renameSync(storePath+'.tmp',storePath);}
+let store=cms.get('personal-data',null)||{sessions:{},messages:[],newsletter:[]};
+if(!cms.get('personal-data',null)&&fs.existsSync(storePath)){store=JSON.parse(fs.readFileSync(storePath,'utf8'));cms.put('personal-data',store);}
+function persist(){cms.put('personal-data',store);}
 function fresh(){return {profile:{name:'Người chơi indie',bio:'Mỗi game là một thế giới. Đây là hành trình của tôi.',favorite:'Phiêu lưu'},library:{},collections:[],comments:[],activity:[]};}
 function json(res,status,data){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));}
 function text(value,max=200){return typeof value==='string'?value.trim().slice(0,max):'';}
 function assert(condition,message){if(!condition)throw new Error(message);}
 function activity(s,message){s.activity.unshift({message,date:new Date().toISOString()});s.activity=s.activity.slice(0,30);}
 async function body(req){let bytes=0,parts=[];for await(const chunk of req){bytes+=chunk.length;if(bytes>32768)throw new Error('Nội dung quá dài.');parts.push(chunk);}return JSON.parse(Buffer.concat(parts).toString()||'{}');}
-function session(req,res){let id=/\biv_session=([a-f0-9-]{36})(?:;|$)/.exec(req.headers.cookie||'')?.[1];if(!id||!store.sessions[id]){id=randomUUID();store.sessions[id]=fresh();persist();res.setHeader('Set-Cookie',`iv_session=${id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=31536000`);}return store.sessions[id];}
+function session(req,res){let id=/\biv_session=([a-f0-9-]{36})(?:;|$)/.exec(req.headers.cookie||'')?.[1];if(!id||!store.sessions[id]){id=randomUUID();store.sessions[id]=fresh();persist();res.setHeader('Set-Cookie',`iv_session=${id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=31536000${cms.origin(req).startsWith('https:')?'; Secure':''}`);}return store.sessions[id];}
 const statuses=['wishlist','playing','completed','paused'];
 const server=http.createServer(async(req,res)=>{try{
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
+ res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: http: data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'");
  const url=new URL(req.url,'http://localhost');
+ if(await cms.handle(req,res,url,store,persist))return;
+ const catalog=cms.publicCatalog();
+ if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')){
+  const files={'/admin':['index.html','text/html'],'/admin/':['index.html','text/html'],'/admin/admin.js':['admin.js','text/javascript'],'/admin/admin.css':['admin.css','text/css']},entry=files[url.pathname];
+  if(!entry||!['GET','HEAD'].includes(req.method))return json(res,404,{error:'Không tìm thấy.'});
+  res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");res.setHeader('X-Frame-Options','DENY');res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type',entry[1]+'; charset=utf-8');return res.end(req.method==='HEAD'?undefined:fs.readFileSync(path.join(root,'admin',entry[0])));
+ }
  if(url.pathname.startsWith('/api/')){
   if(req.method==='GET'&&url.pathname==='/api/catalog')return json(res,200,catalog);
   const s=session(req,res);
   if(req.method==='GET'&&url.pathname==='/api/state')return json(res,200,s);
   if(req.method!=='POST')return json(res,404,{error:'Không tìm thấy chức năng.'});
-  if(req.headers.origin!==`http://${req.headers.host}`)return json(res,403,{error:'Yêu cầu không hợp lệ.'});
+  if(req.headers.origin!==cms.origin(req))return json(res,403,{error:'Yêu cầu không hợp lệ.'});
   const b=await body(req);
   switch(url.pathname){
    case '/api/library':{
@@ -54,11 +64,12 @@ const server=http.createServer(async(req,res)=>{try{
   persist();return json(res,200,s);
  }
  if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Phương thức không được hỗ trợ.'});
- const publicFiles={"/review-perspectives.js":["review-perspectives.js","text/javascript; charset=utf-8"],"/discovery-engine.js":["discovery-engine.js","text/javascript; charset=utf-8"],"/community-config.js":["community-config.js","text/javascript; charset=utf-8"],"/community.js":["community.js","text/javascript; charset=utf-8"],"/experience-v8.js":["experience-v8.js","text/javascript; charset=utf-8"],"/experience-v8.css":["experience-v8.css","text/css; charset=utf-8"],'/indie-hub.js':['indie-hub.js','text/javascript; charset=utf-8'],'/interiors.css':['interiors.css','text/css; charset=utf-8'],'/interiors.js':['interiors.js','text/javascript; charset=utf-8'],'/motion.js':['motion.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/pages.css':['pages.css','text/css; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/favicon.svg':['favicon.svg','image/svg+xml']};
+ const publicFiles={"/cms-client.js":["cms-client.js","text/javascript; charset=utf-8"],"/review-perspectives.js":["review-perspectives.js","text/javascript; charset=utf-8"],"/discovery-engine.js":["discovery-engine.js","text/javascript; charset=utf-8"],"/community-config.js":["community-config.js","text/javascript; charset=utf-8"],"/community.js":["community.js","text/javascript; charset=utf-8"],"/experience-v8.js":["experience-v8.js","text/javascript; charset=utf-8"],"/experience-v8.css":["experience-v8.css","text/css; charset=utf-8"],'/indie-hub.js':['indie-hub.js','text/javascript; charset=utf-8'],'/interiors.css':['interiors.css','text/css; charset=utf-8'],'/interiors.js':['interiors.js','text/javascript; charset=utf-8'],'/motion.js':['motion.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/pages.css':['pages.css','text/css; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/favicon.svg':['favicon.svg','image/svg+xml']};
  for(const [folder,count] of [['oxenfree',4],['rewinder',7]])for(let i=1;i<=count;i++)publicFiles[`/assets/${folder}/scene-${i}.jpg`]=[`assets/${folder}/scene-${i}.jpg`,'image/jpeg'];
  const file=publicFiles[url.pathname]||(path.extname(url.pathname)?null:['index.html','text/html; charset=utf-8']);
  if(!file){res.writeHead(404);return res.end('Not found');}
  res.setHeader('Content-Type',file[1]);res.setHeader('Cache-Control','no-cache');
  fs.readFile(path.join(root,file[0]),(err,data)=>{if(err){res.writeHead(404);return res.end('Not found');}res.end(req.method==='HEAD'?undefined:data);});
-}catch(e){json(res,400,{error:e instanceof SyntaxError?'Dữ liệu chưa hợp lệ.':e.message});}});
-server.listen(Number(process.env.PORT)||5173,'127.0.0.1',()=>console.log(`Indieverse: http://localhost:${Number(process.env.PORT)||5173}`));
+}catch(e){json(res,e.status||400,{error:e instanceof SyntaxError?'Dữ liệu chưa hợp lệ.':e.message});}});
+server.requestTimeout=30000;server.headersTimeout=15000;
+server.listen(Number(process.env.PORT)||5173,process.env.HOST||'127.0.0.1',()=>console.log(`Indieverse: http://localhost:${Number(process.env.PORT)||5173}`));
