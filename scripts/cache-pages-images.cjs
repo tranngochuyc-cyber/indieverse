@@ -87,6 +87,17 @@ for (const game of catalog.games) {
   await Promise.all(Array.from({ length: 16 }, async () => {
     while (next < jobs.length) await jobs[next++]();
   }));
+  // The discovery page has a separate editorial copy of each game record.
+  // Keep it in sync so the hero and cards use the cached artwork too.
+  const byId = new Map(catalog.games.map(game => [game.id, game]));
+  for (const game of catalog.home?.games || []) {
+    const cachedGame = byId.get(game.id);
+    if (!cachedGame) continue;
+    game.localHeroImage = cachedGame.localHeroImage;
+    game.localCoverImage = cachedGame.localCoverImage;
+    game.images = cachedGame.images;
+    game.steamMedia = cachedGame.steamMedia;
+  }
   fs.writeFileSync(catalogPath, JSON.stringify(catalog));
   console.log(`Game art cache: ${cached} images, ${skipped} unavailable, ${(bytesWritten / 1e6).toFixed(1)} MB`);
   if (cached < 3) throw new Error('Game art cache could not download the verified featured images.');
