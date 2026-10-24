@@ -1,6 +1,7 @@
 // Cache the artwork used by GitHub Pages so visitors do not depend on Steam's CDN.
 const fs = require('node:fs');
 const path = require('node:path');
+const sharp = require('sharp');
 
 const dist = path.join(__dirname, '..', 'dist');
 const catalogPath = path.join(dist, 'catalog.json');
@@ -46,9 +47,11 @@ async function save(url, filename) {
     const mime = (response.headers.get('content-type') || '').split(';')[0].toLowerCase();
     const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/avif': 'avif' }[mime];
     if (!response.ok || !ext) return null;
-    const buffer = Buffer.from(await response.arrayBuffer());
-    if (buffer.length < 5000 || buffer.length > 4500000 || bytesWritten + buffer.length > 450000000) return null;
-    const file = `${filename}.${ext}`;
+    const source = Buffer.from(await response.arrayBuffer());
+    if (source.length < 5000 || source.length > 9000000) return null;
+    const buffer = await sharp(source).rotate().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 84, effort: 4 }).toBuffer();
+    if (bytesWritten + buffer.length > 450000000) return null;
+    const file = `${filename}.webp`;
     fs.writeFileSync(path.join(artDir, file), buffer);
     bytesWritten += buffer.length;
     cached++;
@@ -57,13 +60,14 @@ async function save(url, filename) {
 }
 
 for (const game of catalog.games) {
-  const gallery = featured[game.app] || game.images?.slice(0, 3).map(image => image.src) || [];
-  gallery.slice(0, 4).forEach((src, index) => jobs.push(async () => {
+  const gallery = [...(featured[game.app] || []), ...(game.images || []).map(image => image.src)]
+    .filter((src, index, all) => all.indexOf(src) === index).slice(0, 6);
+  gallery.forEach((src, index) => jobs.push(async () => {
     const local = await save(src, `${game.app}-scene-${index + 1}`);
     if (!local) { skipped++; return; }
     if (game.images?.[index]) {
       game.images[index].src = local;
-      if (featured[game.app]) {
+      if (featured[game.app] && index < featured[game.app].length) {
         game.images[index].kind = index === 0 ? 'Hình quảng bá chính thức' : 'Hình minh họa chính thức';
         game.images[index].credit = featuredCredit[game.app][0];
         game.images[index].sourceUrl = featuredCredit[game.app][1];
@@ -84,7 +88,7 @@ for (const game of catalog.games) {
 
 (async () => {
   let next = 0;
-  await Promise.all(Array.from({ length: 16 }, async () => {
+  await Promise.all(Array.from({ length: 12 }, async () => {
     while (next < jobs.length) await jobs[next++]();
   }));
   // The discovery page has a separate editorial copy of each game record.
