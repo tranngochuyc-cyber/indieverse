@@ -26,11 +26,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
+      - run: npm run check
+      - run: npm test
       - name: Refresh official Steam chart snapshot
         run: node scripts/refresh-steam-chart.cjs
         continue-on-error: true
       - run: npm run build:pages
+      - name: Verify custom-domain paths and article fallback
+        run: node scripts/check-pages-domain.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
