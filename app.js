@@ -14,7 +14,7 @@ const unavailableArt=title=>{
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#33294b"/><stop offset="1" stop-color="#171923"/></linearGradient><pattern id="p" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#c6a6f5" stroke-opacity=".12"/></pattern></defs><rect width="1200" height="675" fill="url(#g)"/><rect width="1200" height="675" fill="url(#p)"/><circle cx="996" cy="174" r="210" fill="#a684db" opacity=".13"/><circle cx="1100" cy="556" r="280" fill="#f5b765" opacity=".09"/><path d="M80 100h250M80 115h140" stroke="#c8a6f4" stroke-width="5"/><text x="80" y="500" font-family="Arial,sans-serif" font-size="68" font-weight="700" fill="#f5f1fb">${name.replace(/[&<>"]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]))}</text><text x="84" y="565" font-family="Arial,sans-serif" font-size="23" fill="#d9bfdc">Ảnh nguồn tạm thời không khả dụng</text><text x="84" y="620" font-family="Arial,sans-serif" font-size="20" letter-spacing="5" fill="#e6ad68">INDIEVERSE</text></svg>`;
   return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
 };
-document.addEventListener('error',event=>{
+if(typeof document!=='undefined')document.addEventListener('error',event=>{
   const element=event.target;
   if(element?.tagName!=='IMG'||element.dataset.imageFallback)return;
   element.dataset.imageFallback='true';
