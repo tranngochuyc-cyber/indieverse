@@ -33,6 +33,8 @@ jobs:
         run: node scripts/refresh-steam-chart.cjs
         continue-on-error: true
       - run: npm run build:pages
+      - name: Cache game artwork inside the Pages site
+        run: node scripts/cache-pages-images.cjs
       - name: Verify custom-domain paths and article fallback
         run: node scripts/check-pages-domain.cjs
       - uses: actions/configure-pages@v5
